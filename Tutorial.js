@@ -1,5 +1,5 @@
-const IO = require("../Tools/IO");
-const LoremIpsum = require("../Tools/LoremIpsum");
+const IO = require("IO");
+const LoremIpsum = require("LoremIpsum");
 
 
 Tutorial();
