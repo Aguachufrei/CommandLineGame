@@ -4,7 +4,7 @@
 
 let KHA = [];
 let KHG = {};
-let KHGO = {};//Once value 'used' all functions using KHGO must include KHGO.<key> = false;
+let KHGO = {}; //Once value 'used' all functions using KHGO must include KHGO.<key> = false;
 
 module.exports = {
 	KHA: KHA,
@@ -18,7 +18,9 @@ module.exports = {
 const clear = require("../Tools/Clear.js")
 const readline = require('readline');
 readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
+//Enables raw mode making terminal process characters as single characters.
+process.stdin.setRawMode(true)
+process.stdin.resume()
 
 
 process.stdin.on('keypress', (str, key) => {
@@ -29,7 +31,12 @@ process.stdin.on('keypress', (str, key) => {
 		process.exit(0);
 	}
 	if (key.name) {
-		KHG[key.name] = true;
+		KHG[key.name] = true;function disableKeyboard() {
+			process.stdout.write = () => {};
+		}
+		function enableKeyboard() {
+			process.stdout.write = originalWrite;
+		}
 		KHGO[key.name] = true;
 		const index = KHA.indexOf(key.name);
 		if (index === -1) {

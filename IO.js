@@ -6,7 +6,7 @@
 //////////
 //Import//
 //////////
-const NodeKeys = require("NodeKeys");
+const keys = require("./NodeKeys");
 
 
 //////////
@@ -18,6 +18,8 @@ module.exports = {
 	longSpell: longSpell,
 	sleep: sleep,
 	ask: ask,
+	disableKeyboard:disableKeyboard,
+	enableKeyboard:enableKeyboard,
 };
 
 
@@ -51,6 +53,7 @@ async function ask(string) {
 }
 
 
+
 ///////
 //Say//
 ///////
@@ -66,9 +69,10 @@ function say(string) {
 /////////
 //// /!\ asked in stack overflow: How to disable keyboard input from displaying on the terminal while still detecting keypress events in Node.js?
 async function spell(string, ms, wait = true, newLine = true) {
-	//process.stdin.setRawMode(true);
-	if (newLine) say("");
+	enableKeyboard();
 	let skipped = false;
+	if (newLine) say("");
+	disableKeyboard()
 	if (!string) { console.log("ERROR: bad string;"); return; }
 	const characterArray = string.split("");
 
@@ -82,25 +86,18 @@ async function spell(string, ms, wait = true, newLine = true) {
 	}
 	//Write character by character
 	for (let i = 0; i < characterArray.length; i++) {
+		enableKeyboard();
 		process.stdout.write(string[i]);
+		disableKeyboard();
 		if (i > startingPosition) {
+			if (keys.KHGO.space) { skipped = true; keys.KHGO.space = false;}
 			if (!skipped) await sleep(ms);
-			if (NodeKeys.KHGO.space) { skipped = true }
-			NodeKeys.KHGO.space = false;
 		}
 	}
 	//wait until space is pressed to continue
-	if (wait) {
-		while (true) {
-			if (NodeKeys.KHGO.space) {
-				NodeKeys.KHGO.space = false;
-				return;
-			}
-			await sleep(1);
-		}
-	}
+	while (!keys.KHGO.space&&wait) {await sleep(1);} keys.KHGO.space = false;
+	enableKeyboard();
 }
-
 
 
 
@@ -128,13 +125,12 @@ async function longSpell(array, ms) {
 			process.stdout.write(array[i][j]);
 			if (j > startingPosition) {
 				if (!skipped) await sleep(ms);
-				if (NodeKeys.KHG.space === true) { skipped = true }
+				if (keys.KHG.space === true) { skipped = true }
 			}
 		}
 		say("");
 	}
 }
-
 
 
 /////////
@@ -146,3 +142,16 @@ function sleep(ms = 40) {
 }
 
 
+////////////////////
+//Disable keyboard//
+////////////////////
+
+//To disable the keyboard we overwrite the write function to a empty function
+//We save the implementation in a constant so we can enable it
+const originalWrite = process.stdout.write;
+function disableKeyboard() {
+	process.stdout.write = () => {};
+}
+function enableKeyboard() {
+	process.stdout.write = originalWrite;
+}

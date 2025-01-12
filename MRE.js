@@ -43,6 +43,7 @@ async function spell(string, ms){
     while(!KHGO.space){
         await sleep(1);
     }
+    KHGO.space = false;
     enableKeyboard();
 }
 
