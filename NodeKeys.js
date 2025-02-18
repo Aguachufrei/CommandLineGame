@@ -15,7 +15,7 @@ module.exports = {
 //Import//
 //////////
 
-const clear = require("../Tools/Clear.js")
+const clear = require("./Clear.js")
 const readline = require('readline');
 readline.emitKeypressEvents(process.stdin);
 //Enables raw mode making terminal process characters as single characters.
