@@ -20,6 +20,6 @@ async function Tutorial(){
     await IO.spell("Las preguntas se podran distinguir por estar entre los signos '¿' y '?'",30);
     await IO.spell("Seguida a la pregunta encontraras el simbolo '>' que indicara que ahora eres tu el que tiene que dar la respuesta");
     await IO.spell("El tipo de respuestas pueden variar desde un numero o una palabra hasta una frase entera");
-    //await IO.askEqualLoop("Vale probemos, escribe ahora manzana","manzana","Veo que ya has comprendido como responder","Intentalo de nuevo, escribe 'manzana'");
+    await IO.askExact("Vale probemos, escribe ahora manzana",["manzana"],"Veo que ya has comprendido como responder","Intentalo de nuevo, escribe 'manzana'");
     
 }

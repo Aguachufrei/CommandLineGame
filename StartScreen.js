@@ -36,7 +36,7 @@ await IO.longSpell([
 "                                             Antes de nada recuerda que puedes salir en cualquier momento presionando ctrl + z",
 ],15);
 nombre = await IO.ask("como te llamas?");
-await IO.spell("Hola " + nombre + " encantado de conocert");
+await IO.spell("Hola " + nombre + " encantado de conocerte");
 
 
 

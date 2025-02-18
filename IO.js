@@ -7,6 +7,7 @@
 //Import//
 //////////
 const keys = require("./NodeKeys");
+const chalk = require("chalk");
 
 
 //////////
@@ -18,6 +19,7 @@ module.exports = {
 	longSpell: longSpell,
 	sleep: sleep,
 	ask: ask,
+	askExact: askExact,
 	disableKeyboard:disableKeyboard,
 	enableKeyboard:enableKeyboard,
 };
@@ -38,14 +40,37 @@ const rl = readline.createInterface({
 
 async function ask(string) {
 	return new Promise((resolve) => {
-		rl.question(string + "\n > ", (input) => {
+		rl.question(chalk.yellow(string) + "\n > ", (input) => {
 			if (input === null || input === undefined || input.trim() === "") {
 				//Invalid answer
-				console.log("Incorrect response, please try again.");
+				process.stdout.write(chalk.red("Incorrect response, please try again."));
 				resolve(ask(question));  // Recursively call ask if the input is invalid
 			} else {
 				//Valid answer
 				rl.close();
+				resolve(input);
+			}
+		});
+	});
+}
+
+
+/////////////
+//Ask exact//
+/////////////
+
+async function askExact(m, array, mTrue = "", mFalse = "Incorrect response, please try again.") {
+	return new Promise((resolve) => {
+		rl.question(chalk.yellow(m) + "\n > ", (input) => {
+			if (input === null || input === undefined || input.trim() === ""||!array.includes(input)) {
+				//Invalid answer
+				console.log(chalk.red(mFalse));
+				resolve(askExact(m, array, mTrue, mFalse));  // Recursively call ask if the input is invalid
+			} else {
+				//Valid answer
+				console.log(mTrue);
+				rl.close();
+				console.log(chalk.green("Your response: ") + input);
 				resolve(input);
 			}
 		});
